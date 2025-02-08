@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export const ProductCard = ({ product }) => {
   const [added, setAdded] = useState(false);
