@@ -1,31 +1,40 @@
-name : Deploy react application in BeanStalk
-on :
-    push:
-        branches:
-            - "master"
+name: Deploy React Application in BeanStalk
+
+on:
+  push:
+    branches:
+      - "master"
+
 jobs:
-    deploy: 
-        runs-on: ubuntu-latest
-        steps:
-        - name: Checkout source code
-          uses: actions/checkout@v2
+  deploy:
+    runs-on: ubuntu-latest
 
-        - name: Install dependencies and build React app
-          run: | 
-            npm install
-            npm run build
+    steps:
+      # Checkout the source code
+      - name: Checkout source code
+        uses: actions/checkout@v2
 
-        - name: Generate deployment package
-          run: zip -r deploy.zip . -x '*.git*'
+      # Install dependencies and build the React app
+      - name: Install dependencies and build React app
+        run: |
+          npm install
+          npm run build
 
-        - name: Deploy to EB
-          uses: einaregilsson/beanstalk-deploy@v21
-          with:
-            aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            application_name: ecommerce-app
-            environment_name: Ecommerce-app-env 
-            version_label: ${{ github.sha }}
-            existing_bucket_name: elasticbeanstalk-ap-south-1-869935081261
-            region: ap-south-1
-            deployment_package: deploy.zip
+      # Generate deployment package (exclude .git)
+      - name: Generate deployment package
+        run: zip -r deploy.zip . -x '*.git*'
+
+      # Cleanup Docker containers (if any) and remove existing Docker image
+      - name: Stop and remove Docker containers and images
+        run: |
+          # Stop all running Docker containers
+          docker ps -q | xargs docker stop
+          # Remove all containers (both running and stopped)
+          docker ps -a -q | xargs docker rm
+          # Remove any existing Docker images (you can replace `my-react-app` with your image name)
+          docker rmi my-react-app || true
+          docker system prune -f  # Clean up unused resources
+
+      # Deploy to Elastic Beanstalk
+      - name: Deploy to EB
+        uses: einar
