@@ -15,7 +15,6 @@ export const ProductCard = ({ product }) => {
         alt={product.title}
         className="img"
       />
-      
       <div className="mt-4">
         <h3 className="text-lg font-semibold">{product.title}</h3>
         <p className="text-gray-500">${product.price}</p>
