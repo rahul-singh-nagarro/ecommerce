@@ -24,16 +24,20 @@ jobs:
       - name: Generate deployment package
         run: zip -r deploy.zip . -x '*.git*'
 
-      # Cleanup Docker containers (if any) and remove existing Docker image
+      # Safe Cleanup: Stop & Remove Containers, Remove Old Docker Images
       - name: Stop and remove Docker containers and images
         run: |
-          # Stop all running Docker containers
-          docker ps -q | xargs docker stop
-          # Remove all containers (both running and stopped)
-          docker ps -a -q | xargs docker rm
-          # Remove any existing Docker images (you can replace `my-react-app` with your image name)
-          docker rmi my-react-app || true
-          docker system prune -f  # Clean up unused resources
+          # Stop all running containers (only if any exist)
+          docker ps -q | grep . && docker ps -q | xargs docker stop || echo "No running containers to stop"
+          
+          # Remove all stopped containers (only if any exist)
+          docker ps -a -q | grep . && docker ps -a -q | xargs docker rm || echo "No containers to remove"
+          
+          # Remove any existing Docker images (only if they exist)
+          docker images -q my-react-app | grep . && docker rmi my-react-app || echo "No old images to remove"
+          
+          # Clean up unused Docker resources (optional)
+          docker system prune -f || echo "Nothing to prune"
 
       # Deploy to Elastic Beanstalk
       - name: Deploy to EB
