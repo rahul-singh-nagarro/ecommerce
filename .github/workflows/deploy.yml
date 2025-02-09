@@ -37,4 +37,13 @@ jobs:
 
       # Deploy to Elastic Beanstalk
       - name: Deploy to EB
-        uses: einar
+        uses: einaregilsson/beanstalk-deploy@v21
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: ecommerce-app
+          environment_name: Ecommerce-app-env
+          version_label: ${{ github.sha }}
+          existing_bucket_name: elasticbeanstalk-ap-south-1-869935081261
+          region: ap-south-1
+          deployment_package: deploy.zip
