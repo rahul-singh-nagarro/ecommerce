@@ -10,6 +10,11 @@ jobs:
         - name: Checkout source code
           uses: actions/checkout@v2
 
+        - name: Install dependencies and build React app
+          run: | 
+            npm install
+            npm run build
+
         - name: Generate deployment package
           run: zip -r deploy.zip . -x '*.git*'
 
