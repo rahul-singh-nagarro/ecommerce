@@ -56,6 +56,6 @@ jobs:
           application_name: shop-ease
           environment_name: Shop-ease-env
           version_label: ${{ github.sha }}
-          existing_bucket_name: elasticbeanstalk-ap-south-1-869935081261
-          region: ap-south-1
+          existing_bucket_name: elasticbeanstalk-us-east-1-869935081261
+          region: us-east-1
           deployment_package: deploy.zip
