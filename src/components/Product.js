@@ -18,6 +18,7 @@ export const ProductCard = ({ product }) => {
       <div className="mt-4">
         <h3 className="text-lg font-semibold">{product.title}</h3>
         <p className="text-gray-500">${product.price}</p>
+        Testing
         <button
           onClick={handleAddToCart}
           className="mt-4 flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded"
